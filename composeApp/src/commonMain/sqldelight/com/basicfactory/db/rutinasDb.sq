@@ -1,0 +1,30 @@
+CREATE TABLE RutinaEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    dayWeek INTEGER NOT NULL,
+    cantidadEjercicios INTEGER NOT NULL,
+    duracion INTEGER NOT NULL
+);
+
+insert:
+INSERT INTO RutinaEntity(nombre, dayWeek, cantidadEjercicios, duracion)
+VALUES (?,?,?,?);
+
+update:
+UPDATE RutinaEntity
+SET nombre = ?,
+    dayWeek = ?,
+    cantidadEjercicios = ?,
+    duracion = ?
+WHERE id = ?;
+
+updateCantidadEjercicios:
+UPDATE RutinaEntity
+SET cantidadEjercicios = ?
+WHERE id = ?;
+
+delete:
+DELETE FROM RutinaEntity WHERE id = ?;
+
+selectAll:
+SELECT * FROM RutinaEntity;

@@ -1,0 +1,39 @@
+CREATE TABLE EjercicioEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    muscleGroup INTEGER NOT NULL,
+    equipment INTEGER NOT NULL,
+    unilateral INTEGER NOT NULL,
+    imagen TEXT NOT NULL,
+    tipoRegistro INTEGER NOT NULL
+);
+
+INSERT INTO EjercicioEntity (nombre, muscleGroup, equipment, unilateral, imagen, tipoRegistro)
+VALUES
+('Elevaciones laterales con mancuernas', 2, 2,0,'img',1),
+('Press inclinado con mancuernas', 2, 2,0,'img',1),
+('Press banca', 2, 2,0,'img',1),
+('Aperturas en máquina', 2, 2,0,'img',1),
+('Elevación lateral unilateral con cable', 2, 2,0,'img',1),
+('Extensión triceps en cable con cuerdas', 2, 2,0,'img',1);
+
+insert:
+INSERT INTO EjercicioEntity (nombre, muscleGroup, equipment, unilateral, imagen, tipoRegistro)
+VALUES
+(?, ?, ?,?,?,?);
+
+update:
+UPDATE EjercicioEntity
+SET nombre = ?,
+    muscleGroup = ?,
+    equipment = ?,
+    unilateral = ?,
+    imagen = ?,
+    tipoRegistro = ?
+WHERE id = ?;
+
+selectEjeForId:
+SELECT * FROM EjercicioEntity WHERE id = ?;
+
+selectAll:
+SELECT * FROM EjercicioEntity;

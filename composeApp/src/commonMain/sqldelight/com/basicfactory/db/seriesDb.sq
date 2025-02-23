@@ -1,0 +1,39 @@
+CREATE TABLE SerieEntity (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        idEjercicio INTEGER NOT NULL,
+        idRutina INTEGER NOT NULL,
+        reps INTEGER NOT NULL,
+        weight REAL NOT NULL
+);
+
+
+insert:
+INSERT INTO SerieEntity (idEjercicio, idRutina, reps, weight)
+VALUES
+(?,?,?,?);
+
+update:
+UPDATE SerieEntity
+SET idEjercicio = ?,
+    idRutina = ?,
+    reps = ?,
+    weight = ?
+WHERE id = ?;
+
+updateWeightReps:
+UPDATE SerieEntity
+SET reps = ?,
+    weight = ?
+WHERE id = ?;
+
+delete:
+DELETE FROM SerieEntity WHERE id = ?;
+
+deleteAllSeriesByExercie:
+DELETE FROM SerieEntity WHERE idEjercicio = ? AND idRutina = ?;
+
+selectSeriesFromEjeAndRutina:
+SELECT * FROM SerieEntity WHERE idRutina = ?;
+
+selectIdEjeFromRutina:
+SELECT DISTINCT idEjercicio FROM SerieEntity WHERE idRutina = ?;
