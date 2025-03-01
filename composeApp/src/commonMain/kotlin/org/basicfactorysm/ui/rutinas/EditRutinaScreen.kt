@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,7 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -59,7 +61,6 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun EditRutinaScreen(nav: Navigator, rutinasViewModel: RutinasViewModel) {
 
-    val listaEjercicios = rutinasViewModel.listaEjerciciosByRutina
     val listaSeries = rutinasViewModel.listaSeries
     val listaSeriesAux = rutinasViewModel.listaSeriesAux
 
@@ -194,7 +195,7 @@ fun ItemSet(s: Serie, rutinasViewModel: RutinasViewModel) {
     ) {
         Card(
             modifier = Modifier.fillMaxSize(),
-            backgroundColor = Color.Black
+            backgroundColor = if (s.isChecked.value) Color(0xff066800) else Color.Black
         ) {
 
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -211,6 +212,14 @@ fun ItemSet(s: Serie, rutinasViewModel: RutinasViewModel) {
                     rutinasViewModel.onValueChangeSerie(s.id, weight, reps)
                 }, "REPS", modifierTextFiled)
 
+                Spacer(modifier = Modifier.width(15.dp))
+
+                Icon(
+                    Icons.Default.CheckCircle,
+                    modifier = Modifier.clickable { s.isChecked.value = !s.isChecked.value },
+                    contentDescription = "checkIcon",
+                    tint = if (s.isChecked.value) Color(0xff0de000) else Color.Gray
+                )
             }
         }
     }

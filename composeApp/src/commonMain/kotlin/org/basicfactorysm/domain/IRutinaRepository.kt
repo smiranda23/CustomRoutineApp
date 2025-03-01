@@ -3,6 +3,8 @@ package org.basicfactorysm.domain
 import org.basicfactorysm.model.Ejercicio
 import org.basicfactorysm.model.Rutina
 import org.basicfactorysm.model.Serie
+import org.basicfactorysm.model.SerieFinalizada
+import org.basicfactorysm.model.Training
 
 interface IRutinaRepository {
     fun getRutinas(): List<Rutina>
@@ -25,7 +27,7 @@ interface IRutinaRepository {
     fun addSetToExercise(idEjercicio: Int, idRutina: Int, reps: Int, weight: Double)
 
     fun getSeriesByRutina(idRutina: Int): List<Serie>
-    fun deleteSeriesByEjercicio(idEjercicio: Int, idRutina: Int)
+    fun deleteSeriesRoutine(idRutina: Int)
     fun deleteSerie(idSerie: Int)
 
     //UPDATES
@@ -33,5 +35,14 @@ interface IRutinaRepository {
 
     //Pasamos la lista de series modificada
     fun updateSetsRutina(serie: Serie)
+
+    //TRAINING
+    fun getTrainings(): List<Training>
+    fun addTraining(t: Training)
+
+    //SERIE FINALIZZADO
+    fun getSeriesFinalizadas(idTraining: Int): List<SerieFinalizada>
+
+
 
 }

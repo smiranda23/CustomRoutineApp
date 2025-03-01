@@ -1,0 +1,15 @@
+CREATE TABLE SerieFinalizadaEntity (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        idTraining INTEGER NOT NULL,
+        idEjercicio INTEGER NOT NULL,
+        reps INTEGER NOT NULL,
+        weight REAL NOT NULL
+);
+
+insert:
+INSERT INTO SerieFinalizadaEntity (idTraining,idEjercicio, reps, weight)
+VALUES
+(?,?,?,?);
+
+selectFromIdTraining:
+SELECT * FROM SerieFinalizadaEntity WHERE idTraining = ?;

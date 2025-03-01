@@ -29,8 +29,8 @@ WHERE id = ?;
 delete:
 DELETE FROM SerieEntity WHERE id = ?;
 
-deleteAllSeriesByExercie:
-DELETE FROM SerieEntity WHERE idEjercicio = ? AND idRutina = ?;
+deleteAllSeriesByRoutine:
+DELETE FROM SerieEntity WHERE idRutina = ?;
 
 selectSeriesFromEjeAndRutina:
 SELECT * FROM SerieEntity WHERE idRutina = ?;

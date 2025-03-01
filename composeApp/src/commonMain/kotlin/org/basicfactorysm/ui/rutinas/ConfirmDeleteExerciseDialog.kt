@@ -12,9 +12,9 @@ fun ConfirmDeleteExerciseDialog(rutinasViewModel: RutinasViewModel){
         title = { Text("Eliminar ejercicio") },
         text = { Text("¿Estás seguro que desea eliminar este ejercicio?") },
         confirmButton = {
-            TextButton(onClick = {rutinasViewModel.deleteExerciseAndSeries()}) {
+            /*TextButton(onClick = {rutinasViewModel.deleteExerciseAndSeries()}) {
                 Text("Delete")
-            }
+            }*/
         },
         dismissButton = {
             TextButton(onClick = {rutinasViewModel.hideConfirmDeleteExercise()}) {

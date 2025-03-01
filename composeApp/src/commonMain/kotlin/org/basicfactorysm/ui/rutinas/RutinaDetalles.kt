@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
@@ -23,6 +24,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,7 +65,12 @@ fun RutinaDetallesScreen(navigator: Navigator, rutinasViewModel: RutinasViewMode
 
             Spacer(modifier = Modifier.height(5.dp))
             Box(modifier = Modifier.align(Alignment.End)) {
-                ButtonEditRutina(navigator)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    ButtonStartRutina(navigator, rutinasViewModel)
+                    Spacer(modifier = Modifier.width(5.dp))
+                    ButtonEditRutina(navigator)
+                }
+
             }
             Spacer(modifier = Modifier.height(5.dp))
 
@@ -73,6 +80,30 @@ fun RutinaDetallesScreen(navigator: Navigator, rutinasViewModel: RutinasViewMode
         }
     }
 
+}
+
+@Composable
+fun ButtonStartRutina(navigator: Navigator, rutinasViewModel: RutinasViewModel) {
+    Button(
+        modifier = Modifier.padding(8.dp),
+        shape = RoundedCornerShape(50.dp),
+        border = BorderStroke(1.dp, colorRed),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color(0xff28970d)
+        ),
+        onClick = {
+            navigator.navigate(Rutas.StartRoutine.ruta)
+            rutinasViewModel.iniciarTimer()
+        }) {
+        Row(
+            modifier = Modifier.padding(horizontal = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Start Routine!", color = Color.White)
+            Spacer(modifier = Modifier.width(5.dp))
+            Icon(Icons.Default.PlayCircle, contentDescription = "IconPlay", tint = Color.White)
+        }
+    }
 }
 
 @Composable

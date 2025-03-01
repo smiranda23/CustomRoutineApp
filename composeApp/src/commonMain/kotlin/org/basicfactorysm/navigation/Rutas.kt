@@ -7,6 +7,7 @@ enum class Rutas(val ruta: String) {
     Rutinas("Rutinas"),
     CreateExercise("CreateExercise"),
     EditRutina("EditRutina"),
+    StartRoutine("StartRoutine"),
     AddExercise("AddExercise"),
     DetalleRutina("DetalleRutina"),
     Accesos("Accesos"),

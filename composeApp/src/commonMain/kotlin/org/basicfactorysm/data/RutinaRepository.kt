@@ -2,16 +2,24 @@ package org.basicfactorysm.data
 
 import androidx.compose.runtime.MutableState
 import com.basicfactory.db.DatabaseBF
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toInstant
 import org.basicfactorysm.domain.IRutinaRepository
 import org.basicfactorysm.model.Ejercicio
 import org.basicfactorysm.model.Rutina
 import org.basicfactorysm.model.Serie
+import org.basicfactorysm.model.SerieFinalizada
+import org.basicfactorysm.model.Training
 
 class RutinaRepository(private val database: DatabaseBF) : IRutinaRepository {
 
     private val queriesRutina = database.rutinasDbQueries
     private val queriesEjercicio = database.ejerciciosDbQueries
     private val queriesSeries = database.seriesDbQueries
+
+    private val queriesTrainings = database.trainingDbQueries
+    private val queriesSeriesFinalizada = database.serieFinalizadaDbQueries
 
     override fun getRutinas(): List<Rutina> {
         return queriesRutina.selectAll().executeAsList().map {
@@ -137,9 +145,9 @@ class RutinaRepository(private val database: DatabaseBF) : IRutinaRepository {
         }
     }
 
-    override fun deleteSeriesByEjercicio(idEjercicio: Int, idRutina: Int) {
+    override fun deleteSeriesRoutine(idRutina: Int) {
         queriesSeries.transaction {
-            queriesSeries.deleteAllSeriesByExercie(idEjercicio.toLong(), idRutina.toLong())
+            queriesSeries.deleteAllSeriesByRoutine(idRutina.toLong())
         }
     }
 
@@ -148,6 +156,44 @@ class RutinaRepository(private val database: DatabaseBF) : IRutinaRepository {
             queriesSeries.delete(idSerie.toLong())
         }
     }
+
+    override fun getTrainings(): List<Training> {
+
+        return queriesTrainings.selectAll().executeAsList().map {
+            Training(
+                id = it.id.toInt(),
+                name = it.name,
+                dateTime = LocalDateTime.parse(it.datetime.toString()),
+                setsFinished = it.setsFinished.toInt()
+            )
+        }
+
+    }
+
+    override fun addTraining(t: Training) {
+        queriesTrainings.transaction {
+            queriesTrainings.insert(
+                name = t.name,
+                datetime = 1,
+                setsFinished = t.setsFinished.toLong()
+            )
+        }
+    }
+
+    override fun getSeriesFinalizadas(idTraining: Int): List<SerieFinalizada> {
+
+        return queriesSeriesFinalizada.selectFromIdTraining(idTraining.toLong()).executeAsList()
+            .map {
+                SerieFinalizada(
+                    id = it.id.toInt(),
+                    idTraining = it.idTraining.toInt(),
+                    idEjercicio = it.idEjercicio.toInt(),
+                    reps = it.reps.toInt(),
+                    weight = it.weight.toDouble()
+                )
+            }
+    }
+
 
 }
 

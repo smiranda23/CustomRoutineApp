@@ -4,24 +4,25 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
 import moe.tlaster.precompose.viewmodel.ViewModel
 import moe.tlaster.precompose.viewmodel.viewModelScope
 import org.basicfactorysm.domain.IRutinaRepository
 import org.basicfactorysm.model.Ejercicio
 import org.basicfactorysm.model.Rutina
 import org.basicfactorysm.model.Serie
+import org.basicfactorysm.model.Training
 
 class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() {
-
 
     private var _listaRutinas by mutableStateOf(listOf<Rutina>())
     val listaRutinas: List<Rutina> get() = _listaRutinas
 
-    var tipoRutinaSeleccionada: String = ""
-
     var rutinaSeleccionada by mutableStateOf<Rutina?>(null)
 
+    //We use for the screen 'RutinaDetalles'
     private var _listaEjerciciosByRutina by mutableStateOf(listOf<Ejercicio>())
     val listaEjerciciosByRutina: List<Ejercicio> get() = _listaEjerciciosByRutina
 
@@ -56,8 +57,6 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
         viewModelScope.launch {
             _listaRutinas = repository.getRutinas()
         }
-        //animacionDelete.value = true
-
     }
 
     //Variable que se completa cuando haces clic en una rutina, y es la que usamos
@@ -83,12 +82,6 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
 
         listaSeriesAux = _listaSeries
 
-        //Al añadir ejercicio nuevo, solo mostraremos la lista de los que NO estan en la listaEjerciciosByRutina
-        val idsEjerciciosByRutina = _listaEjerciciosByRutina.map { it.id }.toSet()
-
-        /*_listaAllExercises = _listaAllExercises.filter { exe ->
-            exe.id !in idsEjerciciosByRutina
-        }*/
 
     }
 
@@ -134,9 +127,11 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
         _showConfirmDeleteRutina.value = false
     }
 
+    //When we deleted a routine, we delete all series related to that routine
     fun deleteRutina(idRutina: Int) {
         viewModelScope.launch {
             repository.deleteRutina(idRutina)
+            repository.deleteSeriesRoutine(idRutina)
             getRutinas()
         }
         hideConfirmDeleteRutina()
@@ -155,24 +150,12 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
 
 
         listaExercicesSelected.forEach {
-            _listaEjerciciosByRutina = _listaEjerciciosByRutina + it
             addSetForListaUI(it.id, idRutinaSeleccionada)
         }
 
+        //Reset parameter 'selected'
+        _listaAllExercises.forEach { it.selected.value = false }
 
-        //buscarSeriesyEjerciciosByRutina(idRutinaSeleccionada)
-        //getRutinas()
-        //rutinaSeleccionada = _listaRutinas.find { it.id == idRutinaSeleccionada }
-    }
-
-    private fun addExerciseSelected() {
-        //---ESTO LO HACMEOS CUANDO INSERTAMOS EN BBDD---//
-        //Update count exercises from RutinaEntity
-        /*val count = listaExercicesSelected.size + rutinaSeleccionada!!.cantidadEjercicios
-        viewModelScope.launch {
-            repository.addExercicesSelected(listaExercicesSelected, idRutinaSeleccionada)
-            repository.actualizarCountExeRutina(count, idRutinaSeleccionada)
-        }*/
     }
 
     //DELETE EXERCISE, PENDIENTE DE IMPLEMENTAR, DAREMOS OPCION DED BORRAR EJERCICIO COMPLETO
@@ -193,34 +176,13 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
         _showConfirmDeleteExercise.value = false
     }
 
-    //Borramos de la bbdd las SeriesEntity, y el ejercicios lo eliminamos
-    //de la lista _listaEjerciciosByRutina, NO de EjerciciosEntity
-    //------NO SE USA----//
-    fun deleteExerciseAndSeries() {
-        _listaEjerciciosByRutina = _listaEjerciciosByRutina.filter { it.id != idEjercicioSelected }
-
-        viewModelScope.launch {
-            repository.deleteSeriesByEjercicio(idEjercicioSelected, rutinaSeleccionada!!.id)
-        }
-        hideConfirmDeleteExercise()
-        buscarSeriesyEjerciciosByRutina(rutinaSeleccionada!!.id)
-
-        val count = _listaEjerciciosByRutina.size
-        viewModelScope.launch {
-            repository.actualizarCountExeRutina(count, rutinaSeleccionada!!.id)
-        }
-
-        getRutinas()
-        rutinaSeleccionada = _listaRutinas.find { it.id == rutinaSeleccionada!!.id }
-    }
-
     //------SECTION CRUD SERIE-----//
 
     fun deleteSerieByListaUI(serie: Serie) {
         _listaSeries = _listaSeries - serie
     }
 
-    fun deleteSerie(idSerie: Int) {
+    private fun deleteSerie(idSerie: Int) {
         repository.deleteSerie(idSerie)
         buscarSeriesyEjerciciosByRutina(idRutinaSeleccionada)
     }
@@ -243,10 +205,7 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
 
     fun addSetForListaUI(idEjercicio: Int, idRutina: Int) {
         val index = _listaSeries.maxOfOrNull { it.id } ?: 0
-
         _listaSeries = _listaSeries + Serie(index + 1, idEjercicio, idRutina, 0, 0.0)
-
-        //buscarSeriesyEjerciciosByRutina(idRutina)
     }
 
     private fun addSet(idEjercicio: Int, idRutina: Int, reps: Int, weight: Double) {
@@ -329,12 +288,111 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
     fun onClickGuardarEjercicio() {
         repository.createExercise(nombreExercise)
         getAllExercises()
+    }
 
-        //Al añadir ejercicio nuevo, solo mostraremos la lista de los que NO estan en la listaEjerciciosByRutina
-        val idsEjerciciosByRutina = _listaEjerciciosByRutina.map { it.id }.toSet()
+    //-----START ROUTINE SCREEN-------//
 
-        _listaAllExercises = _listaAllExercises.filter { exe ->
-            exe.id !in idsEjerciciosByRutina
+    //TIMER
+    private val _timer = mutableStateOf(0) // Contador en segundos
+    val timer: State<Int> get() = _timer
+
+    private val _timerStarted = mutableStateOf(false)
+    val timerStarted: State<Boolean> get() = _timerStarted
+
+    fun iniciarTimer() {
+        if (!_timerStarted.value) {
+            _timerStarted.value = true
+            startTimer()
+        } else {
+            //Si ya esta iniciado, no hacemos nada
+        }
+    }
+
+    private fun startTimer() {
+        viewModelScope.launch {
+            while (_timerStarted.value) {
+                delay(1000L)
+                _timer.value += 1
+            }
+        }
+    }
+
+    fun detenerTimer() {
+        _timerStarted.value = false
+    }
+
+    fun reiniciarTimer() {
+        _timerStarted.value = false
+        _timer.value = 0
+    }
+
+    fun getFormattedTime(): String {
+        val minutos = _timer.value / 60
+        val segundos = _timer.value % 60
+        if (minutos == 0) {
+            return "$segundos";
+        } else {
+            return "$minutos min:$segundos"
+        }
+
+        //return String.format("%02d:%02d", minutos, segundos)
+    }
+
+    //CLICK FINALIZAR RUTINA
+    fun onClickFinalizarRutina() {
+        //Al finalizar rutina, comprobamos si hay alguna serie con el check de 'hecho'
+        val listaSeriesFinalizadas = listaSeries.filter { it.isChecked.value==true }
+
+        //Si hay series con el 'check'
+        if(listaSeriesFinalizadas.isNotEmpty()){
+            showDialogConfirmEndRoutine()
+        }else{
+            //Si no hay ninguna serie con el check, lanzamos OTRO mensaje
+            showDialogInfoRutinaSinValores()
+        }
+
+        hideDialogCreateRutina()
+    }
+
+    // POP UP CONFIRMAR FINALIZAR RUTINA
+    private val _showConfirmEndRoutine = mutableStateOf(false)
+    val showConfirmEndRoutine: State<Boolean> get() = _showConfirmEndRoutine
+
+    private fun showDialogConfirmEndRoutine() {
+        _showConfirmEndRoutine.value = true
+    }
+
+    fun hideDialogConfirmEndRoutine() {
+        _showConfirmEndRoutine.value = false
+    }
+
+    //Usamos para mostrar dialog, que informa cuando intentas
+    //finalizar la rutina y no has 'checkeado' ninguna serie
+    private val _showInfoRutinaSinValores = mutableStateOf(false)
+    val showInfoRutinaSinValores: State<Boolean> get() = _showInfoRutinaSinValores
+
+    private fun showDialogInfoRutinaSinValores() {
+        _showInfoRutinaSinValores.value = true
+    }
+
+    fun hideDialogInfoRutinaSinValores() {
+        _showInfoRutinaSinValores.value = false
+    }
+
+    fun saveTraining() {
+        val count = listaSeries.count { it.isChecked.value }
+
+        rutinaSeleccionada?.let {
+            val training = Training(
+                id = 0,
+                name = it.nombre,
+                dateTime = LocalDateTime.parse("2020-08-30T18:43"),
+                setsFinished = count
+            )
+
+            viewModelScope.launch {
+                repository.addTraining(training)
+            }
         }
 
     }

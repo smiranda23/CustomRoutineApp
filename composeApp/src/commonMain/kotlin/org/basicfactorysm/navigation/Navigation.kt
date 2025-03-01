@@ -18,13 +18,14 @@ import org.basicfactorysm.ui.ClasesScreen
 import org.basicfactorysm.ui.EntrenadoresScreen
 import org.basicfactorysm.ui.HomeScreen
 import org.basicfactorysm.ui.LoginScreen
-import org.basicfactorysm.ui.recetas.RecetasScreen
 import org.basicfactorysm.ui.SettingsScreen
+import org.basicfactorysm.ui.recetas.RecetasScreen
 import org.basicfactorysm.ui.rutinas.AddExerciseScreen
 import org.basicfactorysm.ui.rutinas.CreateExerciseScreen
 import org.basicfactorysm.ui.rutinas.EditRutinaScreen
 import org.basicfactorysm.ui.rutinas.RutinaDetallesScreen
 import org.basicfactorysm.ui.rutinas.RutinasScreen
+import org.basicfactorysm.ui.rutinas.StartRoutineScreen
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -56,6 +57,9 @@ fun MyNavigation(nav: Navigator) {
         }
         scene(Rutas.Rutinas.ruta) {
             RutinasScreen(nav, rutinasViewModel)
+        }
+        scene(Rutas.StartRoutine.ruta) {
+            StartRoutineScreen(nav, rutinasViewModel)
         }
         scene(Rutas.AddExercise.ruta) {
             AddExerciseScreen(rutinasViewModel, nav)

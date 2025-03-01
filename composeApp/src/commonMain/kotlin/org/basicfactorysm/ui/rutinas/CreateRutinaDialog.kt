@@ -31,6 +31,7 @@ fun CreateRutinaDialog(rutinasViewModel: RutinasViewModel) {
         ) {
             Column {
                 TextField(
+                    singleLine = true,
                     value = rutinasViewModel.nombre,
                     onValueChange = { rutinasViewModel.nombre = it },
                     label = { Text("Nombre") })
