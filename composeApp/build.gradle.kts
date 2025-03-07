@@ -7,7 +7,9 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     kotlin("plugin.serialization") version "2.0.21" //Misma version que en InteliJ
-    id("app.cash.sqldelight") version "2.0.2"
+    id("app.cash.sqldelight") version "2.0.1"
+    alias(libs.plugins.cocoapods)
+
 }
 
 sqldelight {
@@ -36,6 +38,20 @@ kotlin {
             isStatic = true
         }
     }
+
+    cocoapods {
+        summary = "Some description for the Shared Module"
+        homepage = "Link to the Shared Module homepage"
+        version = "1.0"
+        ios.deploymentTarget = "15.4"
+        podfile = project.file("../iosApp/Podfile")
+        framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+    }
+
+
 
     sourceSets {
 
@@ -103,11 +119,16 @@ kotlin {
         iosMain.dependencies {
             //iOS dependencies
 
+
+
             //ktor
             implementation(libs.ktor.client.darwin)
             //sqldelight
-            implementation("app.cash.sqldelight:native-driver:2.0.2")
+            implementation("app.cash.sqldelight:native-driver:2.0.1")
+            //implementation("app.cash.sqldelight:sqlite-driver:2.0.2") // Asegúrate de agregar el driver SQLite
 
+            //stately-common
+            implementation(libs.stately.common)
 
 
         }
