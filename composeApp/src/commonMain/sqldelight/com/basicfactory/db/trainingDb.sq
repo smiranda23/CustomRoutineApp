@@ -1,14 +1,15 @@
 CREATE TABLE TrainingEntity (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        datetime INTEGER NOT NULL,
+        duration INTEGER NOT NULL,
+        date TEXT NOT NULL,
         setsFinished INTEGER NOT NULL
 );
 
 insert:
-INSERT INTO TrainingEntity (name, datetime, setsFinished)
+INSERT INTO TrainingEntity (name,duration, date, setsFinished)
 VALUES
-(?,?,?);
+(?,?,?,?);
 
 delete:
 DELETE FROM TrainingEntity WHERE id = ?;

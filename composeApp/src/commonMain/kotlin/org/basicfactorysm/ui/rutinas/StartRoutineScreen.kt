@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -36,19 +38,22 @@ fun StartRoutineScreen(navigator: Navigator, rutinasViewModel: RutinasViewModel)
                 TimerRoutine(rutinasViewModel)
             }
             Box(modifier = Modifier.weight(0.8f)) {
-                //ListaEjerciciosEditRutina(listaEjercicios, rutinasViewModel)
                 ListaSets(listaSeries, rutinasViewModel)
             }
+            Box(modifier = Modifier.weight(0.1f)) {
+                Divider(modifier = Modifier.fillMaxWidth().height(4.dp).background(Color.DarkGray))
+                ButtonAddEjercicio(navigator)
+            }
         }
-
-        if (rutinasViewModel.showConfirmEndRoutine.value) {
-            DialogConfirmEndRoutine(rutinasViewModel)
-        }
-        if (rutinasViewModel.showInfoRutinaSinValores.value) {
-            DialogInfoRoutineSinValores(navigator, rutinasViewModel)
-        }
-
     }
+
+    if (rutinasViewModel.showConfirmEndRoutine.value) {
+        DialogConfirmEndRoutine(rutinasViewModel, navigator)
+    }
+    if (rutinasViewModel.showInfoRutinaSinValores.value) {
+        DialogInfoRoutineSinValores(navigator, rutinasViewModel)
+    }
+
 }
 
 
@@ -57,11 +62,13 @@ fun TopBarStartRoutine(navigator: Navigator, rutinasViewModel: RutinasViewModel)
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
+
         TextButton(onClick = { navigator.goBack() }) {
             Text("Cancelar", color = Color.White)
         }
         Spacer(modifier = Modifier.weight(1f))
-        TextButton(colors = ButtonDefaults.textButtonColors(backgroundColor = Color.Blue),
+        TextButton(
+            colors = ButtonDefaults.textButtonColors(backgroundColor = Color.Blue),
             shape = RoundedCornerShape(50.dp),
             onClick = {
                 rutinasViewModel.onClickFinalizarRutina()
@@ -89,17 +96,19 @@ fun TimerRoutine(rutinasViewModel: RutinasViewModel) {
 }
 
 @Composable
-fun DialogConfirmEndRoutine(rutinasViewModel: RutinasViewModel) {
+fun DialogConfirmEndRoutine(rutinasViewModel: RutinasViewModel, navigator: Navigator) {
 
-    AlertDialog(onDismissRequest = { rutinasViewModel.hideDialogConfirmEndRoutine() },
+    AlertDialog(
+        onDismissRequest = { rutinasViewModel.hideDialogConfirmEndRoutine() },
         title = { Text("Finalizar") },
         text = { Text("¿Finalizar y guardar rutina?") },
         confirmButton = {
             TextButton(onClick = {
                 rutinasViewModel.hideDialogConfirmEndRoutine()
-                rutinasViewModel.onClickGuardarRutina()
                 rutinasViewModel.reiniciarTimer()
                 rutinasViewModel.saveTraining()
+                rutinasViewModel.onClickGuardarRutina()
+                navigator.goBack()
 
             }) {
                 Text("Guardar", color = Color.Green, fontWeight = FontWeight.Bold)
@@ -116,7 +125,8 @@ fun DialogConfirmEndRoutine(rutinasViewModel: RutinasViewModel) {
 @Composable
 fun DialogInfoRoutineSinValores(navigator: Navigator, rutinasViewModel: RutinasViewModel) {
 
-    AlertDialog(onDismissRequest = { rutinasViewModel.hideDialogInfoRutinaSinValores() },
+    AlertDialog(
+        onDismissRequest = { rutinasViewModel.hideDialogInfoRutinaSinValores() },
         title = { Text("Finalizar") },
         text = { Text("La rutina no tiene ninguna serie completada") },
         confirmButton = {

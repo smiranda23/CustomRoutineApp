@@ -2,11 +2,15 @@ package org.basicfactorysm.presentacion
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import moe.tlaster.precompose.viewmodel.ViewModel
 import moe.tlaster.precompose.viewmodel.viewModelScope
 import org.basicfactorysm.domain.IRutinaRepository
@@ -71,18 +75,19 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
     }
 
     private fun buscarSeriesyEjerciciosByRutina(idRutina: Int) {
-        getAllExercises()
-        listaIdsEjerciciosByRutina = repository.getIDsEjercicios(idRutina)
+        //Solo ejecutamos las llamadas cuando NO hay rutina en progreso
+        if (!timerStarted.value) {
+            getAllExercises()
+            listaIdsEjerciciosByRutina = repository.getIDsEjercicios(idRutina)
 
-        _listaEjerciciosByRutina = repository.getEjercicios(listaIdsEjerciciosByRutina)
+            _listaEjerciciosByRutina = repository.getEjercicios(listaIdsEjerciciosByRutina)
 
-        //Buscamos todas las series de esa rutina, posteriormente filtraremos
-        // por el idEjercicio de cada objeto Serie para mostrarlo en ItemEjercicio
-        _listaSeries = repository.getSeriesByRutina(idRutina)
+            //Buscamos todas las series de esa rutina, posteriormente filtraremos
+            // por el idEjercicio de cada objeto Serie para mostrarlo en ItemEjercicio
+            _listaSeries = repository.getSeriesByRutina(idRutina)
 
-        listaSeriesAux = _listaSeries
-
-
+            listaSeriesAux = _listaSeries
+        }
     }
 
 
@@ -282,6 +287,13 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
         }
 
         buscarSeriesyEjerciciosByRutina(idRutinaSeleccionada)
+
+        //Actualizamos cantidad ejercicios de rutina en SQL
+        val countExercises = _listaSeries.groupBy { it.idEjercicio }.count()
+        rutinaSeleccionada!!.cantidadEjercicios = countExercises
+        repository.actualizarCountExeRutina(countExercises, idRutinaSeleccionada)
+        getRutinas()
+
     }
 
     //Creamos ejercicio nuevo
@@ -298,6 +310,13 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
 
     private val _timerStarted = mutableStateOf(false)
     val timerStarted: State<Boolean> get() = _timerStarted
+
+    fun setearCheckedMap() {
+        // Sincronizamos el estado de isCheckedMap con _listaSeries
+        _listaSeries.forEach { serie ->
+            isCheckedMap.put(serie.id, serie.isChecked.value) // Si ya existe, no lo sobrescribe
+        }
+    }
 
     fun iniciarTimer() {
         if (!_timerStarted.value) {
@@ -341,12 +360,12 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
     //CLICK FINALIZAR RUTINA
     fun onClickFinalizarRutina() {
         //Al finalizar rutina, comprobamos si hay alguna serie con el check de 'hecho'
-        val listaSeriesFinalizadas = listaSeries.filter { it.isChecked.value==true }
+        val listaSeriesFinalizadas = listaSeries.filter { it.isChecked.value == true }
 
         //Si hay series con el 'check'
-        if(listaSeriesFinalizadas.isNotEmpty()){
+        if (listaSeriesFinalizadas.isNotEmpty()) {
             showDialogConfirmEndRoutine()
-        }else{
+        } else {
             //Si no hay ninguna serie con el check, lanzamos OTRO mensaje
             showDialogInfoRutinaSinValores()
         }
@@ -380,13 +399,17 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
     }
 
     fun saveTraining() {
-        val count = listaSeries.count { it.isChecked.value }
 
+        val currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+
+        //Contamos cuantas series ha marcado como finalizada
+        val count = isCheckedMap.count { it.value }
         rutinaSeleccionada?.let {
             val training = Training(
                 id = 0,
                 name = it.nombre,
-                dateTime = LocalDateTime.parse("2020-08-30T18:43"),
+                duration = timer.value,
+                date = currentDate.toString(),
                 setsFinished = count
             )
 
@@ -395,6 +418,30 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
             }
         }
 
+        //Despues de crear el training, ya podemos guardar las series finalizadas
+        //ya que tenemos el ID del training
+
+        val idTrainig = repository.getTrainings().last().id
+        saveSeriesFinalizadas(idTrainig)
+
+    }
+
+    fun saveSeriesFinalizadas(idTraining: Int) {
+        val idSeriesFinalizadas = isCheckedMap.filter { it.value }
+
+        val listaSeriesFinalizadas = _listaSeries.filter { it.id in idSeriesFinalizadas.keys }
+
+        listaSeriesFinalizadas.forEach { s ->
+            repository.addSerieFinalizada(idTraining, s.idEjercicio, s.reps, s.weight)
+        }
+    }
+
+
+    // Mapa para gestionar el estado de "isChecked"
+    private val isCheckedMap = mutableStateMapOf<Int, Boolean>()
+
+    fun modificarSerieChecked(s: Serie) {
+        isCheckedMap[s.id] = !(isCheckedMap[s.id] ?: false)
     }
 
 

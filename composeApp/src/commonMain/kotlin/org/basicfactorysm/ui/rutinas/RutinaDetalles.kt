@@ -64,11 +64,16 @@ fun RutinaDetallesScreen(navigator: Navigator, rutinasViewModel: RutinasViewMode
             }
 
             Spacer(modifier = Modifier.height(5.dp))
-            Box(modifier = Modifier.align(Alignment.End)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    ButtonStartRutina(navigator, rutinasViewModel)
-                    Spacer(modifier = Modifier.width(5.dp))
-                    ButtonEditRutina(navigator)
+            Box(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                Column {
+                    if (rutinasViewModel.timerStarted.value) {
+                        TimerRoutine(rutinasViewModel)
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        ButtonStartRutina(navigator, rutinasViewModel)
+                        Spacer(modifier = Modifier.width(5.dp))
+                        ButtonEditRutina(navigator)
+                    }
                 }
 
             }
@@ -89,19 +94,29 @@ fun ButtonStartRutina(navigator: Navigator, rutinasViewModel: RutinasViewModel) 
         shape = RoundedCornerShape(50.dp),
         border = BorderStroke(1.dp, colorRed),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color(0xff28970d)
+            backgroundColor = if (rutinasViewModel.timerStarted.value) Color(0xffc6bb00) else Color(
+                0xff28970d
+            )
         ),
         onClick = {
+            if (!rutinasViewModel.timerStarted.value) {
+                rutinasViewModel.iniciarTimer()
+                rutinasViewModel.setearCheckedMap()
+            }
             navigator.navigate(Rutas.StartRoutine.ruta)
-            rutinasViewModel.iniciarTimer()
         }) {
         Row(
             modifier = Modifier.padding(horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Start Routine!", color = Color.White)
+            Text(
+                text = if (rutinasViewModel.timerStarted.value) "En progreso..." else "Start Routine!",
+                color = Color.White
+            )
             Spacer(modifier = Modifier.width(5.dp))
-            Icon(Icons.Default.PlayCircle, contentDescription = "IconPlay", tint = Color.White)
+            if (!rutinasViewModel.timerStarted.value) {
+                Icon(Icons.Default.PlayCircle, contentDescription = "IconPlay", tint = Color.White)
+            }
         }
     }
 }

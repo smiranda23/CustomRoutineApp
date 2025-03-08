@@ -1,5 +1,6 @@
 package org.basicfactorysm.model
 
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
@@ -7,7 +8,8 @@ import kotlinx.serialization.Serializable
 data class Training(
     var id: Int,
     var name: String,
-    var dateTime: LocalDateTime,
+    var duration: Int,
+    var date: String,
     var setsFinished: Int
 ) {
 }

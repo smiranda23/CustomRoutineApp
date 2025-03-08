@@ -163,7 +163,8 @@ class RutinaRepository(private val database: DatabaseBF) : IRutinaRepository {
             Training(
                 id = it.id.toInt(),
                 name = it.name,
-                dateTime = LocalDateTime.parse(it.datetime.toString()),
+                duration = it.duration.toInt(),
+                date = it.date,
                 setsFinished = it.setsFinished.toInt()
             )
         }
@@ -174,7 +175,8 @@ class RutinaRepository(private val database: DatabaseBF) : IRutinaRepository {
         queriesTrainings.transaction {
             queriesTrainings.insert(
                 name = t.name,
-                datetime = 1,
+                duration = t.duration.toLong(),
+                date = t.date,
                 setsFinished = t.setsFinished.toLong()
             )
         }
@@ -192,6 +194,17 @@ class RutinaRepository(private val database: DatabaseBF) : IRutinaRepository {
                     weight = it.weight.toDouble()
                 )
             }
+    }
+
+    override fun addSerieFinalizada(idTraining: Int, idEjercicio: Int, reps: Int, weight: Double) {
+        queriesSeriesFinalizada.transaction {
+            queriesSeriesFinalizada.insert(
+                idTraining.toLong(),
+                idEjercicio.toLong(),
+                reps.toLong(),
+                weight
+            )
+        }
     }
 
 

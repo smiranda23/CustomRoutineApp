@@ -42,7 +42,6 @@ interface IRutinaRepository {
 
     //SERIE FINALIZZADO
     fun getSeriesFinalizadas(idTraining: Int): List<SerieFinalizada>
-
-
+    fun addSerieFinalizada(idTraining: Int, idEjercicio: Int, reps: Int, weight: Double)
 
 }

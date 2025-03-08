@@ -48,7 +48,11 @@ fun RutinasScreen(nav: Navigator, rutinasViewModel: RutinasViewModel) {
 
         Column(modifier = Modifier.fillMaxSize()) {
             TopBarBasicFactory("Rutinas", nav)
-            ListaPlanes(rutinasViewModel, nav)
+            ListaRutinas(rutinasViewModel, nav)
+        }
+
+        BottomBarNav(modifier = Modifier.align(Alignment.BottomCenter), nav) {
+
         }
 
         FloattingShowAddRutina(
@@ -58,6 +62,15 @@ fun RutinasScreen(nav: Navigator, rutinasViewModel: RutinasViewModel) {
 
         if (rutinasViewModel.showCreateRutina.value)
             CreateRutinaDialog(rutinasViewModel)
+    }
+}
+
+@Composable
+fun BottomBarNav(modifier: Modifier, nav: Navigator, rutinasViewModel: RutinasViewModel) {
+    Box() {
+        Row {
+
+        }
     }
 }
 
@@ -73,7 +86,7 @@ fun FloattingShowAddRutina(modifier: Modifier, rutinasViewModel: RutinasViewMode
 
 
 @Composable
-fun ListaPlanes(rutinasViewModel: RutinasViewModel, nav: Navigator) {
+fun ListaRutinas(rutinasViewModel: RutinasViewModel, nav: Navigator) {
 
     val listaRutinas = rutinasViewModel.listaRutinas
 

@@ -216,7 +216,11 @@ fun ItemSet(s: Serie, rutinasViewModel: RutinasViewModel) {
 
                 Icon(
                     Icons.Default.CheckCircle,
-                    modifier = Modifier.clickable { s.isChecked.value = !s.isChecked.value },
+                    modifier = Modifier.clickable {
+
+                        s.isChecked.value = !s.isChecked.value
+                        rutinasViewModel.modificarSerieChecked(s)
+                    },
                     contentDescription = "checkIcon",
                     tint = if (s.isChecked.value) Color(0xff0de000) else Color.Gray
                 )
