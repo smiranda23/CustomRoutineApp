@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,8 +44,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -237,23 +240,23 @@ fun CustomTextField(
     label: String,
     modifierTextFiled: Modifier
 ) {
-    OutlinedTextField(
-        value = valor,
-        onValueChange = onValueChange,
-        singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        label = { Text(label, color = Color.White) },
-        textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color(0xFF00A6FF), // Azul al enfocar
-            unfocusedBorderColor = Color.Gray, // Gris cuando no está enfocado
-            cursorColor = Color(0xFF00A6FF), // Azul para el cursor
-            textColor = Color.White,
-            backgroundColor = Color(0x40FFFFFF) // Blanco con transparencia
-        ),
-        shape = RoundedCornerShape(12.dp), // Bordes redondeados
-        modifier = modifierTextFiled
-    )
+        OutlinedTextField(
+            value = valor,
+            onValueChange = onValueChange,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            label = { Text(label, color = Color.White) },
+            textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF00A6FF), // Azul al enfocar
+                unfocusedBorderColor = Color.Gray, // Gris cuando no está enfocado
+                cursorColor = Color(0xFF00A6FF), // Azul para el cursor
+                textColor = Color.White,
+                backgroundColor = Color(0x40FFFFFF) // Blanco con transparencia
+            ),
+            shape = RoundedCornerShape(12.dp), // Bordes redondeados
+            modifier = modifierTextFiled
+        )
 }
 
 

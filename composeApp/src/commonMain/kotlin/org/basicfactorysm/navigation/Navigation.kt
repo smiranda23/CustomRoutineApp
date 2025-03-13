@@ -23,6 +23,7 @@ import org.basicfactorysm.ui.recetas.RecetasScreen
 import org.basicfactorysm.ui.rutinas.AddExerciseScreen
 import org.basicfactorysm.ui.rutinas.CreateExerciseScreen
 import org.basicfactorysm.ui.rutinas.EditRutinaScreen
+import org.basicfactorysm.ui.rutinas.EntrenamientosScreen
 import org.basicfactorysm.ui.rutinas.RutinaDetallesScreen
 import org.basicfactorysm.ui.rutinas.RutinasScreen
 import org.basicfactorysm.ui.rutinas.StartRoutineScreen
@@ -57,6 +58,9 @@ fun MyNavigation(nav: Navigator) {
         }
         scene(Rutas.Rutinas.ruta) {
             RutinasScreen(nav, rutinasViewModel)
+        }
+        scene(Rutas.Entrenamientos.ruta) {
+            EntrenamientosScreen(nav, rutinasViewModel)
         }
         scene(Rutas.StartRoutine.ruta) {
             StartRoutineScreen(nav, rutinasViewModel)

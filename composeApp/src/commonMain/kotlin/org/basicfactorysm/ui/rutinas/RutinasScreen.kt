@@ -23,11 +23,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,6 +39,7 @@ import org.basicfactorysm.model.Rutina
 import org.basicfactorysm.navigation.Rutas
 import org.basicfactorysm.presentacion.RutinasViewModel
 import org.basicfactorysm.ui.genericos.TopBarBasicFactory
+import org.basicfactorysm.ui.nativo.NativeTextField
 import org.basicfactorysm.utils.Dia
 import org.basicfactorysm.utils.SwipeToDeleteContainer
 import org.basicfactorysm.utils.backgroundApp
@@ -51,9 +55,7 @@ fun RutinasScreen(nav: Navigator, rutinasViewModel: RutinasViewModel) {
             ListaRutinas(rutinasViewModel, nav)
         }
 
-        BottomBarNav(modifier = Modifier.align(Alignment.BottomCenter), nav) {
-
-        }
+        BottomBarNav(modifier = Modifier.align(Alignment.BottomCenter), nav, rutinasViewModel)
 
         FloattingShowAddRutina(
             modifier = Modifier.align(Alignment.BottomEnd).padding(15.dp),
@@ -67,8 +69,15 @@ fun RutinasScreen(nav: Navigator, rutinasViewModel: RutinasViewModel) {
 
 @Composable
 fun BottomBarNav(modifier: Modifier, nav: Navigator, rutinasViewModel: RutinasViewModel) {
-    Box() {
-        Row {
+    Box(modifier = modifier) {
+        Row (verticalAlignment = Alignment.CenterVertically){
+            IconButton(onClick = {nav.navigate(Rutas.Rutinas.ruta)}) {
+                Icon(Icons.Default.Home, contentDescription = "homeIcon", tint = Color.White)
+            }
+            Spacer(modifier= Modifier.width(10.dp))
+            IconButton(onClick = {nav.navigate(Rutas.Entrenamientos.ruta)}) {
+                Icon(Icons.Default.History, contentDescription = "historialIcon", tint = Color.White)
+            }
 
         }
     }
@@ -76,12 +85,14 @@ fun BottomBarNav(modifier: Modifier, nav: Navigator, rutinasViewModel: RutinasVi
 
 @Composable
 fun FloattingShowAddRutina(modifier: Modifier, rutinasViewModel: RutinasViewModel) {
-    IconButton(
-        onClick = { rutinasViewModel.showDialogCreateRutina() },
-        modifier = modifier.background(shape = RoundedCornerShape(50.dp), color = Color.White)
-    ) {
-        Icon(Icons.Default.Add, contentDescription = "add")
-    }
+
+    NativeTextField({}, modifier.width(100.dp).height(60.dp))
+//    IconButton(
+//        onClick = { rutinasViewModel.showDialogCreateRutina() },
+//        modifier = modifier.background(shape = RoundedCornerShape(50.dp), color = Color.White)
+//    ) {
+//        Icon(Icons.Default.Add, contentDescription = "add")
+//    }
 }
 
 

@@ -424,6 +424,9 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
         val idTrainig = repository.getTrainings().last().id
         saveSeriesFinalizadas(idTrainig)
 
+        //Cargamos nuevamente la lista de trainings
+        getTrainings()
+
     }
 
     fun saveSeriesFinalizadas(idTraining: Int) {
@@ -443,6 +446,19 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
     fun modificarSerieChecked(s: Serie) {
         isCheckedMap[s.id] = !(isCheckedMap[s.id] ?: false)
     }
+
+    //SECTION TRAININGS
+
+    private var _listTrainings by mutableStateOf(listOf<Training>())
+    val listTrainings: List<Training> get() = _listTrainings
+
+    fun getTrainings(){
+        viewModelScope.launch {
+        _listTrainings = repository.getTrainings()
+        }
+
+    }
+
 
 
 }

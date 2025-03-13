@@ -12,6 +12,7 @@
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		AE1B49954DDA596D8AD18671 /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2AC5A374653550D649A7A8F /* Pods_iosApp.framework */; };
+		E18AA6142D8231CE005DAE82 /* NativeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E18AA6132D8231CE005DAE82 /* NativeTextField.swift */; };
 		E1F8737F2D7A6D52002CD4FB /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E1F8737E2D7A6D52002CD4FB /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,7 @@
 		9C32EC236C38E0AF93C3E499 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
 		AB3632DC29227652001CCB65 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		B2AC5A374653550D649A7A8F /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E18AA6132D8231CE005DAE82 /* NativeTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeTextField.swift; sourceTree = "<group>"; };
 		E1F8737E2D7A6D52002CD4FB /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -86,6 +88,7 @@
 				7555FF8C242A565B00829871 /* Info.plist */,
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
+				E18AA6132D8231CE005DAE82 /* NativeTextField.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				E18AA6142D8231CE005DAE82 /* NativeTextField.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
