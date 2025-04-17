@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -20,65 +21,91 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Assignment
 import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import moe.tlaster.precompose.navigation.Navigator
 import org.basicfactorysm.model.Rutina
 import org.basicfactorysm.navigation.Rutas
 import org.basicfactorysm.presentacion.RutinasViewModel
+import org.basicfactorysm.presentacion.TrainingViewModel
 import org.basicfactorysm.ui.genericos.TopBarBasicFactory
 import org.basicfactorysm.ui.nativo.NativeTextField
 import org.basicfactorysm.utils.Dia
 import org.basicfactorysm.utils.SwipeToDeleteContainer
 import org.basicfactorysm.utils.backgroundApp
-import org.basicfactorysm.utils.styleItemDayWeek
+import org.basicfactorysm.utils.colorRed
 
 @Composable
-fun RutinasScreen(nav: Navigator, rutinasViewModel: RutinasViewModel) {
+fun RutinasScreen(nav: Navigator, rutinasViewModel: RutinasViewModel, trainingViewModel: TrainingViewModel) {
 
     Box(modifier = Modifier.fillMaxSize().background(backgroundApp)) {
 
         Column(modifier = Modifier.fillMaxSize()) {
-            TopBarBasicFactory("Rutinas", nav)
-            ListaRutinas(rutinasViewModel, nav)
+            TopBarBasicFactory(
+                screen = if(rutinasViewModel.showTrainings.value) "Entrenamientos" else "Rutinas"
+                , nav)
+            if(rutinasViewModel.showRoutines.value){
+                ListaRutinas(rutinasViewModel, nav)
+            }else if(rutinasViewModel.showTrainings.value){
+                ListaEntrenamientos(trainingViewModel, nav)
+            }
+
         }
 
-        BottomBarNav(modifier = Modifier.align(Alignment.BottomCenter), nav, rutinasViewModel)
+        Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.align(Alignment.BottomEnd)){
+            BottomBarNav(rutinasViewModel, trainingViewModel)
+        }
 
-        FloattingShowAddRutina(
-            modifier = Modifier.align(Alignment.BottomEnd).padding(15.dp),
-            rutinasViewModel
-        )
+        if(rutinasViewModel.showRoutines.value){
+            FloattingShowAddRutina(
+                modifier = Modifier.align(Alignment.BottomEnd).padding(bottom = 80.dp),
+                rutinasViewModel
+            )
+        }
 
+        //Show dialog to add Routine
         if (rutinasViewModel.showCreateRutina.value)
             CreateRutinaDialog(rutinasViewModel)
     }
 }
 
 @Composable
-fun BottomBarNav(modifier: Modifier, nav: Navigator, rutinasViewModel: RutinasViewModel) {
-    Box(modifier = modifier) {
+fun BottomBarNav(rutinasViewModel: RutinasViewModel, trainingViewModel: TrainingViewModel) {
+    Box(modifier = Modifier.background(Color.White).fillMaxWidth().padding(4.dp),
+        contentAlignment = Alignment.Center) {
         Row (verticalAlignment = Alignment.CenterVertically){
-            IconButton(onClick = {nav.navigate(Rutas.Rutinas.ruta)}) {
-                Icon(Icons.Default.Home, contentDescription = "homeIcon", tint = Color.White)
-            }
-            Spacer(modifier= Modifier.width(10.dp))
-            IconButton(onClick = {nav.navigate(Rutas.Entrenamientos.ruta)}) {
-                Icon(Icons.Default.History, contentDescription = "historialIcon", tint = Color.White)
-            }
 
+            IconButton(onClick = {rutinasViewModel.onClickButtonRoutines()}) {
+                Column (horizontalAlignment = Alignment.CenterHorizontally){
+                    Icon(Icons.Default.FitnessCenter, contentDescription = "fitnessIcon",
+                        tint = if(rutinasViewModel.showRoutines.value) colorRed else Color.Black,
+                        modifier = Modifier.size(40.dp))
+                    Text("Rutinas", fontWeight = FontWeight.Bold)
+                }
+            }
+            Spacer(modifier= Modifier.width(30.dp))
+
+            IconButton(onClick = {rutinasViewModel.onClickButtonTrainings()
+            trainingViewModel.getTrainings()}) {
+                Column (horizontalAlignment = Alignment.CenterHorizontally){
+                    Icon(Icons.AutoMirrored.Filled.Assignment, contentDescription = "historialIcon",
+                        tint = if(rutinasViewModel.showTrainings.value)  colorRed else Color.Black,
+                        modifier = Modifier.size(40.dp))
+                    Text("Historial", fontWeight = FontWeight.Bold)
+                }
+            }
         }
     }
 }
@@ -86,13 +113,13 @@ fun BottomBarNav(modifier: Modifier, nav: Navigator, rutinasViewModel: RutinasVi
 @Composable
 fun FloattingShowAddRutina(modifier: Modifier, rutinasViewModel: RutinasViewModel) {
 
-    NativeTextField({}, modifier.width(100.dp).height(60.dp))
-//    IconButton(
-//        onClick = { rutinasViewModel.showDialogCreateRutina() },
-//        modifier = modifier.background(shape = RoundedCornerShape(50.dp), color = Color.White)
-//    ) {
-//        Icon(Icons.Default.Add, contentDescription = "add")
-//    }
+    //NativeTextField("test",{},"labelTest", Modifier.width(300.dp).height(300.dp))
+    IconButton(
+        onClick = { rutinasViewModel.showDialogCreateRutina() },
+        modifier = modifier.background(shape = RoundedCornerShape(50.dp), color = Color.White)
+    ) {
+        Icon(Icons.Default.Add, contentDescription = "iconAdd")
+    }
 }
 
 

@@ -12,6 +12,7 @@ import org.basicfactorysm.presentacion.EntrenadoresViewModel
 import org.basicfactorysm.presentacion.HomeViewModel
 import org.basicfactorysm.presentacion.RecetasViewModel
 import org.basicfactorysm.presentacion.RutinasViewModel
+import org.basicfactorysm.presentacion.TrainingViewModel
 import org.basicfactorysm.ui.AccesosScreen
 import org.basicfactorysm.ui.AccountScreen
 import org.basicfactorysm.ui.ClasesScreen
@@ -27,6 +28,7 @@ import org.basicfactorysm.ui.rutinas.EntrenamientosScreen
 import org.basicfactorysm.ui.rutinas.RutinaDetallesScreen
 import org.basicfactorysm.ui.rutinas.RutinasScreen
 import org.basicfactorysm.ui.rutinas.StartRoutineScreen
+import org.basicfactorysm.ui.rutinas.TrainingDetailsScreen
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -36,6 +38,8 @@ fun MyNavigation(nav: Navigator) {
     val entrenadoresViewModel = koinViewModel(EntrenadoresViewModel::class) { parametersOf() }
     val cuentaViewModel = koinViewModel(AccountViewModel::class) { parametersOf() }
     val rutinasViewModel = koinViewModel(RutinasViewModel::class) { parametersOf() }
+    val trainingViewModel = koinViewModel(TrainingViewModel::class) { parametersOf() }
+
     val accesViewModel = koinViewModel(AccesViewModel::class) { parametersOf() }
     val recetasViewModel = koinViewModel(RecetasViewModel::class) { parametersOf() }
     val homeViewModel = koinViewModel(HomeViewModel::class) { parametersOf() }
@@ -57,10 +61,13 @@ fun MyNavigation(nav: Navigator) {
             AccountScreen(nav, cuentaViewModel)
         }
         scene(Rutas.Rutinas.ruta) {
-            RutinasScreen(nav, rutinasViewModel)
+            RutinasScreen(nav, rutinasViewModel,trainingViewModel)
         }
         scene(Rutas.Entrenamientos.ruta) {
-            EntrenamientosScreen(nav, rutinasViewModel)
+            EntrenamientosScreen(nav, trainingViewModel,rutinasViewModel)
+        }
+        scene(Rutas.DetalleTraining.ruta) {
+            TrainingDetailsScreen(nav, trainingViewModel)
         }
         scene(Rutas.StartRoutine.ruta) {
             StartRoutineScreen(nav, rutinasViewModel)

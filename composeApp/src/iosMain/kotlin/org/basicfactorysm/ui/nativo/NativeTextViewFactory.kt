@@ -4,8 +4,8 @@ import platform.UIKit.UIViewController
 
 interface NativeTextViewFactory {
     fun createTextFieldView(
-        label: String,
-        onClick: () -> Unit
-        //onValueChange: (String) -> Unit,
+        valor: String,
+        onValueChange: (String) -> Unit,
+        label: String
     ):UIViewController
 }

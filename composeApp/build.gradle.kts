@@ -119,8 +119,6 @@ kotlin {
         iosMain.dependencies {
             //iOS dependencies
 
-
-
             //ktor
             implementation(libs.ktor.client.darwin)
             //sqldelight
@@ -129,8 +127,6 @@ kotlin {
 
             //stately-common
             implementation(libs.stately.common)
-
-
         }
     }
 }

@@ -6,6 +6,8 @@ target 'iosApp' do
   use_frameworks!
 
   pod 'composeApp', :path=> '../composeApp'
+  pod 'IQKeyboardManager', '~> 6.5'
+
   # Pods for iosApp
 
 end

@@ -13,3 +13,4 @@ VALUES
 
 selectFromIdTraining:
 SELECT * FROM SerieFinalizadaEntity WHERE idTraining = ?;
+

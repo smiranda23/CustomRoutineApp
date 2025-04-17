@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -63,24 +65,18 @@ fun AppAndroidPreview() {
 @Composable
 fun Exemple() {
 
+    Box(modifier = Modifier.fillMaxSize()){
 
-    Button(
-        modifier = Modifier.padding(8.dp),
-        shape = RoundedCornerShape(50.dp),
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.Black
-        ),
-        border = BorderStroke(1.dp, colorRed),
-        onClick = {}) {
-        Row(
-            modifier = Modifier.padding(horizontal = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text("Añadir ejercicio" , color = Color.White)
-            Spacer(modifier = Modifier.width(5.dp))
-            Icon(Icons.Default.Add, contentDescription = "addIcon", tint = Color.White)
+        Box (modifier = Modifier.fillMaxWidth().height(100.dp).background(Color.Red).align(Alignment.TopEnd)){  }
+        Box (modifier = Modifier.fillMaxWidth().height(100.dp).background(Color.Green).align(Alignment.Center)
+        ){  }
+        Box (modifier = Modifier.fillMaxWidth().height(100.dp).background(Color.Blue).align(Alignment.BottomEnd),
+            ){
+
         }
+
     }
+
 
 }
 

@@ -1,8 +1,14 @@
 PODS:
   - composeApp (1.0)
+  - IQKeyboardManager (6.5.19)
 
 DEPENDENCIES:
   - composeApp (from `../composeApp`)
+  - IQKeyboardManager (~> 6.5)
+
+SPEC REPOS:
+  trunk:
+    - IQKeyboardManager
 
 EXTERNAL SOURCES:
   composeApp:
@@ -10,7 +16,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   composeApp: 566a3098fb261e357240ba9987ddeeda065a21e3
+  IQKeyboardManager: c8665b3396bd0b79402b4c573eac345a31c7d485
 
-PODFILE CHECKSUM: 5104ada3b17a55885a9e9962d53c55d8d8609417
+PODFILE CHECKSUM: 9687c7170b4c493904dfd9bf086414b4014e3ae6
 
 COCOAPODS: 1.16.2

@@ -51,18 +51,17 @@ fun RecetaDetalles(nav: Navigator, recetasViewModel: RecetasViewModel) {
         TopBarBasicFactory("Detalles", nav)
         Box(modifier = Modifier.weight(0.40f).padding(horizontal = paddingHorizontal)) {
             ImagenReceta(receta)
-
         }
 
         Box(
             modifier = Modifier.weight(0.15f).padding(horizontal = paddingHorizontal)
         ) {
-            Column {               Spacer(modifier = Modifier.height(15.dp))
+            Column {
+                Spacer(modifier = Modifier.height(15.dp))
                 TituloMasDatos(receta)
                 Spacer(modifier = Modifier.height(15.dp))
             }
         }
-
 
         Box(modifier = Modifier.weight(0.15f).padding(horizontal = paddingHorizontal)) {
             Column {
@@ -70,7 +69,6 @@ fun RecetaDetalles(nav: Navigator, recetasViewModel: RecetasViewModel) {
                 Spacer(modifier = Modifier.height(15.dp))
             }
         }
-
 
         Box(modifier = Modifier.weight(0.30f).padding(horizontal = paddingHorizontal)) {
             Column {

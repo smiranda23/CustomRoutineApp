@@ -47,6 +47,7 @@ import basicfactorysm.composeapp.generated.resources.levantar_pesas
 import moe.tlaster.precompose.navigation.Navigator
 import org.basicfactorysm.navigation.Rutas
 import org.basicfactorysm.presentacion.HomeViewModel
+import org.basicfactorysm.ui.nativo.NativeTextField
 import org.basicfactorysm.utils.backgroundApp
 import org.basicfactorysm.utils.backgroundHome
 import org.basicfactorysm.utils.colorRed
@@ -85,6 +86,9 @@ fun Toolbar(navigator: Navigator, homeViewModel: HomeViewModel) {
 
 @Composable
 fun ContenteHome(paddingValues: PaddingValues, nav: Navigator) {
+
+
+    //NativeTextField("test",{},"labelTest", Modifier.width(150.dp).height(150.dp))
 
     Column(modifier = Modifier.fillMaxSize().background(backgroundApp)) {
         Box(modifier = Modifier.weight(0.20f)) {

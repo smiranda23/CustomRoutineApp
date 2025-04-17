@@ -20,6 +20,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Train
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,48 +32,51 @@ import moe.tlaster.precompose.navigation.Navigator
 import org.basicfactorysm.model.Training
 import org.basicfactorysm.navigation.Rutas
 import org.basicfactorysm.presentacion.RutinasViewModel
+import org.basicfactorysm.presentacion.TrainingViewModel
 import org.basicfactorysm.ui.genericos.TopBarBasicFactory
 import org.basicfactorysm.utils.backgroundApp
 
 @Composable
-fun EntrenamientosScreen(nav: Navigator, rutinasViewModel: RutinasViewModel){
+fun EntrenamientosScreen(nav: Navigator, trainingViewModel: TrainingViewModel, rutinasViewModel: RutinasViewModel){
     Box(modifier = Modifier.fillMaxSize().background(backgroundApp)) {
 
         Column(modifier = Modifier.fillMaxSize()) {
             TopBarBasicFactory("Rutinas", nav)
-            ListaEntrenamientos(rutinasViewModel, nav)
+            ListaEntrenamientos(trainingViewModel, nav)
         }
 
-        BottomBarNav(modifier = Modifier.align(Alignment.BottomCenter), nav, rutinasViewModel)
+        Box(contentAlignment = Alignment.BottomCenter){
+            BottomBarNav(rutinasViewModel, trainingViewModel)
+        }
     }
 }
 
 @Composable
-fun ListaEntrenamientos(rutinasViewModel: RutinasViewModel, nav: Navigator) {
+fun ListaEntrenamientos(trainingViewModel: TrainingViewModel, nav: Navigator) {
 
-    val listaTraining = rutinasViewModel.listTrainings
+    val listaTraining = trainingViewModel.listTrainings
     LazyColumn {
         items(listaTraining) {
-            ItemTraining(it)
+            ItemTraining(it,trainingViewModel,nav)
         }
     }
 }
 
 @Composable
-fun ItemTraining(training: Training) {
+fun ItemTraining(training: Training, trainingViewModel: TrainingViewModel, nav: Navigator) {
     Card(
         modifier = Modifier.fillMaxWidth().height(120.dp).padding(10.dp)
             .clickable {
-                //rutinasViewModel.onClickRutina(rutina.id)
-                //nav.navigate(Rutas.DetalleRutina.ruta)
+                trainingViewModel.onClickTraining(training.id)
+                nav.navigate(Rutas.DetalleTraining.ruta)
             }, elevation = 10.dp
     ) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Spacer(modifier = Modifier.width(20.dp))
                 Icon(
-                    Icons.Default.Train,
-                    contentDescription = "iconTrain",
+                    Icons.Default.Checklist,
+                    contentDescription = "iconChecklist",
                     tint = Color.White,
                     modifier = Modifier.background(
                         Color(0xFFffc200),

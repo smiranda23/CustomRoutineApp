@@ -13,13 +13,26 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import moe.tlaster.precompose.viewmodel.ViewModel
 import moe.tlaster.precompose.viewmodel.viewModelScope
+import org.basicfactorysm.data.GlobalObject
 import org.basicfactorysm.domain.IRutinaRepository
 import org.basicfactorysm.model.Ejercicio
 import org.basicfactorysm.model.Rutina
 import org.basicfactorysm.model.Serie
+import org.basicfactorysm.model.SerieFinalizada
 import org.basicfactorysm.model.Training
 
 class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() {
+
+
+    //Boolens for show routines or trainings, bottom bar nav
+    private val _showRoutines = mutableStateOf(true)
+    val showRoutines: State<Boolean> get() = _showRoutines
+
+    //Boolens for show routines or trainings, bottom bar nav
+    private val _showTrainings = mutableStateOf(false)
+    val showTrainings: State<Boolean> get() = _showTrainings
+
+
 
     private var _listaRutinas by mutableStateOf(listOf<Rutina>())
     val listaRutinas: List<Rutina> get() = _listaRutinas
@@ -45,15 +58,24 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
     private var _listaAllExercises by mutableStateOf(listOf<Ejercicio>())
     val listaAllExercises: List<Ejercicio> get() = _listaAllExercises
 
+    //Lista de las series finalizadas de la entidad Training,
+    //son las series que hizo en el entrenamiento
+    private var _listaSeriesTraining by mutableStateOf(listOf<SerieFinalizada>())
+    val listaSeriesTraining: List<SerieFinalizada> get() = _listaSeriesTraining
+
 
     init {
         getRutinas()
         getAllExercises()
     }
 
+
+
+
     private fun getAllExercises() {
         viewModelScope.launch {
             _listaAllExercises = repository.getAllExercises()
+            GlobalObject.ListAllExercises = repository.getAllExercises()
         }
     }
 
@@ -424,9 +446,6 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
         val idTrainig = repository.getTrainings().last().id
         saveSeriesFinalizadas(idTrainig)
 
-        //Cargamos nuevamente la lista de trainings
-        getTrainings()
-
     }
 
     fun saveSeriesFinalizadas(idTraining: Int) {
@@ -447,17 +466,34 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
         isCheckedMap[s.id] = !(isCheckedMap[s.id] ?: false)
     }
 
-    //SECTION TRAININGS
 
-    private var _listTrainings by mutableStateOf(listOf<Training>())
-    val listTrainings: List<Training> get() = _listTrainings
 
-    fun getTrainings(){
-        viewModelScope.launch {
-        _listTrainings = repository.getTrainings()
-        }
 
+    fun onClickButtonRoutines() {
+        _showTrainings.value = false
+        _showRoutines.value = true
     }
+
+    fun onClickButtonTrainings() {
+        _showTrainings.value = true
+        _showRoutines.value = false
+    }
+
+    //Usamos para mostrar dialog para confimar cancelacion de entrenamiento
+    private val _showDialogCancelWorkout = mutableStateOf(false)
+    val showDialogCancelWorkout: State<Boolean> get() = _showDialogCancelWorkout
+
+    private fun showDialogCancelWorkout() {
+        _showDialogCancelWorkout.value = true
+    }
+
+    fun hideDialogCancelWorkout() {
+        _showDialogCancelWorkout.value = false
+    }
+    fun onClickDiscardWorkout() {
+        showDialogCancelWorkout()
+    }
+
 
 
 

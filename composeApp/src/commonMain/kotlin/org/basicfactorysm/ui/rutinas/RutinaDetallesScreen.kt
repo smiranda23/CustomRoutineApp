@@ -22,7 +22,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PlayCircle
 import androidx.compose.runtime.Composable
@@ -44,7 +43,6 @@ import org.basicfactorysm.model.Serie
 import org.basicfactorysm.navigation.Rutas
 import org.basicfactorysm.presentacion.RutinasViewModel
 import org.basicfactorysm.ui.genericos.TopBarBasicFactory
-import org.basicfactorysm.utils.backgroundApp
 import org.basicfactorysm.utils.colorRed
 import org.basicfactorysm.utils.styleItemSetDetailsBody
 import org.basicfactorysm.utils.styleItemSetDetailsHeader
