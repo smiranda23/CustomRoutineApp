@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -80,8 +82,11 @@ fun BodyClases(paddingValues: PaddingValues, clasesViewmodel: ClasesViewModel) {
         modifier = Modifier.fillMaxSize().background(backgroundApp),
         contentAlignment = Alignment.TopCenter
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             ListDaysWeek(clasesViewmodel)
+            Spacer(modifier = Modifier.height(10.dp))
             UIStateClases(clasesViewmodel)
         }
     }
@@ -92,13 +97,21 @@ fun ListDaysWeek(clasesViewModel: ClasesViewModel) {
     val listDayWeek = clasesViewModel.listDayWeek
     Box(
         modifier = Modifier.fillMaxWidth(),
+        //.background(Color.Black, shape = RoundedCornerShape(15.dp))
+        //.border(2.dp, backgroundApp),
         contentAlignment = Alignment.Center
     ) {
-        LazyRow {
-            items(listDayWeek) {
-                DayItem(it, clasesViewModel)
+        Column {
+            LazyRow {
+                items(listDayWeek) {
+                    DayItem(it, clasesViewModel)
+                }
             }
+            Divider(
+                modifier = Modifier.fillMaxWidth().height(2.dp).background(Color.LightGray)
+            )
         }
+
     }
 }
 
@@ -108,7 +121,7 @@ fun DayItem(dia: Dia, clasesViewmodel: ClasesViewModel) {
     val modifierBox = Modifier
         .fillMaxWidth()
         .padding(6.dp)
-        .clip(RoundedCornerShape(20.dp))
+        //.clip(RoundedCornerShape(20.dp))
         .let {
             if (!dia.clicado) it.clickable { clasesViewmodel.onClickDayWeek(dia.fecha) } else it
         }
@@ -123,7 +136,7 @@ fun DayItem(dia: Dia, clasesViewmodel: ClasesViewModel) {
             Box(
                 modifier = Modifier.background(
                     if (dia.clicado) Color(0xFFee5656) else Color.Transparent,
-                    shape = RoundedCornerShape(20.dp)
+                    shape = RoundedCornerShape(10.dp)
                 )
             ) {
                 Text(
@@ -191,47 +204,84 @@ fun ItemClase(clase: Clase, clasesViewmodel: ClasesViewModel) {
 
     Box(
         modifier = Modifier.fillMaxWidth()
-            .height(180.dp)
-            .padding(top = 12.dp).padding(horizontal = 16.dp)
+            .height(130.dp)
+            .padding(top = 8.dp).padding(horizontal = 4.dp)
             .clip(RoundedCornerShape(40.dp))
-            .paint(painter = painter, contentScale = ContentScale.FillBounds)
+            //.paint(painter = painter, contentScale = ContentScale.FillBounds)
             .border(2.dp, colorRed, shape = RoundedCornerShape(40.dp))
             .clickable { clasesViewmodel.onClickClase(clase) },
         contentAlignment = Alignment.Center
     ) {
-        Column(
+
+        /*Row(
             modifier = Modifier.fillMaxWidth().padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.padding(10.dp)) {
+                Text(
+                    clase.horario, fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = Color.White
+                )
+                Text(
+                    clase.nombre,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp,
+                    color = Color.White,
+                )
+
+                Text(
+                    text = clase.monitor, fontSize = 15.sp,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.Start).padding(start = 30.dp)
+                )
+
+
+            }
+
+            Column(horizontalAlignment = Alignment.End) {
+                Text("Marcar como hecho!", color = Color.White)
+
+            }
+        }*/
+        Column(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 clase.nombre,
                 fontWeight = FontWeight.Bold,
-                fontSize = 25.sp,
+                fontSize = 24.sp,
                 color = Color.White,
             )
             Text(
                 clase.sala, fontWeight = FontWeight.Bold,
-                fontSize = 15.sp,
+                fontSize = 12.sp,
                 color = Color.White
             )
 
             Text(
                 clase.horario, fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 color = Color.White
             )
 
             val apuntados = clase.apuntados
             val limite = clase.limite
 
-            Text(
-                text = "$apuntados/$limite", color = Color.White
-            )
 
             Text(
-                text = clase.monitor, fontSize = 15.sp,
+                text = "$apuntados/$limite", color = Color.White, fontSize = 14.sp
+            )
+        }
+
+        Box(
+            modifier = Modifier.align(Alignment.BottomStart)
+                .padding(horizontal = 20.dp, vertical = 14.dp)
+        ) {
+            Text(
+                text = clase.monitor, fontSize = 16.sp,
                 color = Color.White,
-                modifier = Modifier.align(Alignment.Start).padding(start = 30.dp)
             )
         }
     }
