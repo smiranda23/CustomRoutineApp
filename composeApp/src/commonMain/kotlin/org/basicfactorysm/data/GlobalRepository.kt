@@ -16,20 +16,6 @@ class GlobalRepository(private val httpClient: HttpClient, private val database:
 
     private val queries = database.rutinasDbQueries
 
-    override suspend fun getRutinas(): List<Rutina> {
-        /*return queries.selectAll().executeAsList().map {
-            Rutina(
-                id = it.id.toInt(),
-                nombre = it.nombre,
-                descripcion = it.descripcion,
-                cantidadEjercicios = it.cantidadEjercicios.toInt(),
-                duracion = it.duracion.toInt(),
-                ejercicios = emptyList()
-            )
-        }*/
-        val response = DataManager.ListaRutinas
-        return response
-    }
 
     override suspend fun getRecetas(): List<Receta> {
         TODO("Not yet implemented")

@@ -15,9 +15,11 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import moe.tlaster.precompose.viewmodel.ViewModel
 import moe.tlaster.precompose.viewmodel.viewModelScope
+import org.basicfactorysm.data.DataManager
 import org.basicfactorysm.domain.ClaseRepInterface
 import org.basicfactorysm.domain.IGlobalRepository
 import org.basicfactorysm.model.Clase
+import org.basicfactorysm.model.Rutina
 import org.basicfactorysm.utils.ClasesUIState
 import org.basicfactorysm.utils.Dia
 
@@ -94,7 +96,9 @@ class ClasesViewModel(private val repository: IGlobalRepository) : ViewModel() {
             .toLocalDateTime(TimeZone.currentSystemDefault()) // Obtiene la fecha actual
         viewModelScope.launch {
             try {
-                allClases = repository.getClasesPorDia(today.date)
+                //allClases = repository.getClasesPorDia(today.date)
+                allClases = DataManager.ListaClases
+
                 _uiState.value = ClasesUIState.Success(allClases)
             } catch (e: Exception) {
                 _uiState.value = ClasesUIState.Error(e.message ?: "Error desconocido")
@@ -102,7 +106,10 @@ class ClasesViewModel(private val repository: IGlobalRepository) : ViewModel() {
         }
     }
 
+    var claseSeleccionada by mutableStateOf<Clase?>(null)
+
     fun onClickClase(clase: Clase) {
+        claseSeleccionada = clase
         mostrarDialogConfirm()
     }
 
@@ -114,8 +121,14 @@ class ClasesViewModel(private val repository: IGlobalRepository) : ViewModel() {
         _showDialogConfirm.value = false
     }
 
+    //PENDIENTE DE IMPLEMENTAR
     fun onclickReservaConfirmada() {
-
+//        val index = DataManager.ListaClases.indexOfFirst { it.id == claseSeleccionada!!.id }
+//        if (index != -1) {
+//            DataManager.ListaClases[index].reservado = true
+//        }
+        cerrarDialogConfirm()
+        //getClases()
     }
 
 }

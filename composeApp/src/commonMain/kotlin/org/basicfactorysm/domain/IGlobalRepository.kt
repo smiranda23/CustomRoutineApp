@@ -8,7 +8,6 @@ import org.basicfactorysm.model.Rutina
 
 interface IGlobalRepository {
 
-    suspend fun getRutinas(): List<Rutina>
     suspend fun getRecetas(): List<Receta>
     suspend fun getEntrenadores(): List<Entrenador>
     suspend fun getClasesPorDia(today: LocalDate): List<Clase>

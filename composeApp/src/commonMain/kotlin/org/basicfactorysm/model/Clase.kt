@@ -11,5 +11,6 @@ data class Clase(
     val horario: String,
     var apuntados: Int,
     var limite: Int,
-    var monitor: String
+    var monitor: String,
+    var reservado: Boolean = false
 )

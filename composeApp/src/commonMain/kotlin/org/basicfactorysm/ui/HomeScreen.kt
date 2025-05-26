@@ -44,6 +44,8 @@ import basicfactorysm.composeapp.generated.resources.Recetas
 import basicfactorysm.composeapp.generated.resources.Res
 import basicfactorysm.composeapp.generated.resources.RutinasV2
 import basicfactorysm.composeapp.generated.resources.levantar_pesas
+import basicfactorysm.composeapp.generated.resources.logo_factory
+import basicfactorysm.composeapp.generated.resources.logo_factory_v2
 import moe.tlaster.precompose.navigation.Navigator
 import org.basicfactorysm.navigation.Rutas
 import org.basicfactorysm.presentacion.HomeViewModel
@@ -66,10 +68,10 @@ fun Toolbar(navigator: Navigator, homeViewModel: HomeViewModel) {
     TopAppBar(
         title = { Text("Basic Factory Sabadell") },
         navigationIcon = {
-            Icon(
-                painter = painterResource(Res.drawable.levantar_pesas),
+            Image(
+                painter = painterResource(Res.drawable.logo_factory_v2),
                 contentDescription = null,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.fillMaxSize().padding(4.dp)
             )
         },
         actions = {

@@ -1,8 +1,10 @@
 package org.basicfactorysm.ui
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,71 +15,53 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import basicfactorysm.composeapp.generated.resources.Res
-import basicfactorysm.composeapp.generated.resources.zumba
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 import moe.tlaster.precompose.navigation.Navigator
 import org.basicfactorysm.model.Clase
 import org.basicfactorysm.presentacion.ClasesViewModel
+import org.basicfactorysm.ui.genericos.TopBarBasicFactory
 import org.basicfactorysm.utils.ClasesUIState
 import org.basicfactorysm.utils.Dia
 import org.basicfactorysm.utils.backgroundApp
 import org.basicfactorysm.utils.colorRed
 import org.basicfactorysm.utils.styleItemDayWeek
-import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun ClasesScreen(nav: Navigator, clasesViewmodel: ClasesViewModel) {
 
     Scaffold(
         content = { paddingValues -> BodyClases(paddingValues, clasesViewmodel) },
-        topBar = { ToolbarClases(nav) }
+        topBar = { TopBarBasicFactory("Clases Colectivas", nav) }
     )
-}
+    DialogConfirm(clasesViewmodel, clasesViewmodel.showDialogConfirm.value, clasesViewmodel.claseSeleccionada)
 
-@Composable
-fun ToolbarClases(nav: Navigator) {
-    TopAppBar(
-        title = { Text("Clases Colectivas") },
-        navigationIcon = {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = null,
-                modifier = Modifier.size(40.dp).clickable { nav.goBack() }
-            )
-        }
-    )
 }
 
 @Composable
 fun BodyClases(paddingValues: PaddingValues, clasesViewmodel: ClasesViewModel) {
-    if (clasesViewmodel.showDialogConfirm.value) {
-        DialogConfirm(clasesViewmodel)
-    }
+
+
     Box(
         modifier = Modifier.fillMaxSize().background(backgroundApp),
         contentAlignment = Alignment.TopCenter
@@ -85,6 +69,7 @@ fun BodyClases(paddingValues: PaddingValues, clasesViewmodel: ClasesViewModel) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(10.dp))
             ListDaysWeek(clasesViewmodel)
             Spacer(modifier = Modifier.height(10.dp))
             UIStateClases(clasesViewmodel)
@@ -95,57 +80,77 @@ fun BodyClases(paddingValues: PaddingValues, clasesViewmodel: ClasesViewModel) {
 @Composable
 fun ListDaysWeek(clasesViewModel: ClasesViewModel) {
     val listDayWeek = clasesViewModel.listDayWeek
+    val fondoBox = Color(0xFF1B1B1F)
+
     Box(
-        modifier = Modifier.fillMaxWidth(),
-        //.background(Color.Black, shape = RoundedCornerShape(15.dp))
-        //.border(2.dp, backgroundApp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(fondoBox)
+            .border(2.dp, Color(0xFF2A2A2F), shape = RoundedCornerShape(12.dp)),
         contentAlignment = Alignment.Center
     ) {
-        Column {
-            LazyRow {
-                items(listDayWeek) {
-                    DayItem(it, clasesViewModel)
-                }
+        LazyRow(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            items(listDayWeek) {
+                DayItem(it, clasesViewModel)
             }
-            Divider(
-                modifier = Modifier.fillMaxWidth().height(2.dp).background(Color.LightGray)
-            )
         }
-
     }
+
 }
 
 @Composable
 fun DayItem(dia: Dia, clasesViewmodel: ClasesViewModel) {
+    val fondoSeleccionado by animateColorAsState(
+        if (dia.clicado) colorRed else Color.Transparent
+    )
 
     val modifierBox = Modifier
         .fillMaxWidth()
         .padding(6.dp)
-        //.clip(RoundedCornerShape(20.dp))
         .let {
             if (!dia.clicado) it.clickable { clasesViewmodel.onClickDayWeek(dia.fecha) } else it
         }
 
-    Box(modifier = modifierBox, contentAlignment = Alignment.Center) {
+    Box(
+        modifier = modifierBox,
+        contentAlignment = Alignment.Center
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(4.dp)
+            modifier = Modifier
+                .padding(4.dp)
+                .clip(RoundedCornerShape(12.dp))
         ) {
-            val dayWeek = dia.diaSemana.substring(0, 3)
-            Text(dayWeek, fontSize = 12.sp, color = Color.White)
+            val dayWeek = dia.diaSemana.take(3).uppercase()
+            Text(
+                text = dayWeek,
+                fontSize = 12.sp,
+                color = Color(0xFFDDDDDD),
+                letterSpacing = 1.sp
+            )
+
             Box(
-                modifier = Modifier.background(
-                    if (dia.clicado) Color(0xFFee5656) else Color.Transparent,
-                    shape = RoundedCornerShape(10.dp)
-                )
+                modifier = Modifier
+                    .background(
+                        fondoSeleccionado,
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 Text(
-                    dia.d.toString(),
-                    style = styleItemDayWeek,
-                    modifier = Modifier.padding(8.dp)
+                    text = dia.d.toString(),
+                    style = styleItemDayWeek.copy(
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.5.sp
+                    )
                 )
             }
-
         }
     }
 }
@@ -188,11 +193,9 @@ fun ListaClasesError(msjError: String) {
 
 @Composable
 fun ListaClasesSuccess(listaClases: List<Clase>, clasesViewmodel: ClasesViewModel) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        LazyColumn {
-            items(listaClases) {
-                ItemClase(clase = it, clasesViewmodel)
-            }
+    LazyColumn {
+        items(listaClases) {
+            ItemClase(clase = it, clasesViewmodel)
         }
     }
 }
@@ -200,89 +203,78 @@ fun ListaClasesSuccess(listaClases: List<Clase>, clasesViewmodel: ClasesViewMode
 @Composable
 fun ItemClase(clase: Clase, clasesViewmodel: ClasesViewModel) {
 
-    val painter = painterResource(Res.drawable.zumba)
+    val fondoBox = if(!clase.reservado) Color(0xFF1B1B1F) else Color.Green
 
     Box(
-        modifier = Modifier.fillMaxWidth()
-            .height(130.dp)
-            .padding(top = 8.dp).padding(horizontal = 4.dp)
-            .clip(RoundedCornerShape(40.dp))
-            //.paint(painter = painter, contentScale = ContentScale.FillBounds)
-            .border(2.dp, colorRed, shape = RoundedCornerShape(40.dp))
-            .clickable { clasesViewmodel.onClickClase(clase) },
-        contentAlignment = Alignment.Center
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(140.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(fondoBox)
+            .border(1.dp, colorRed, RoundedCornerShape(20.dp))
+            .clickable {
+                clasesViewmodel.onClickClase(clase)
+            }
     ) {
-
-        /*Row(
-            modifier = Modifier.fillMaxWidth().padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(modifier = Modifier.padding(10.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = clase.nombre,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        color = Color.White
+                    )
+                    Text(
+                        text = clase.sala,
+                        fontSize = 14.sp,
+                        color = Color.White.copy(alpha = 0.7f)
+                    )
+                }
                 Text(
-                    clase.horario, fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    text = "${clase.apuntados}/${clase.limite}",
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 14.sp,
                     color = Color.White
                 )
-                Text(
-                    clase.nombre,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 25.sp,
-                    color = Color.White,
-                )
-
-                Text(
-                    text = clase.monitor, fontSize = 15.sp,
-                    color = Color.White,
-                    modifier = Modifier.align(Alignment.Start).padding(start = 30.dp)
-                )
-
-
             }
 
-            Column(horizontalAlignment = Alignment.End) {
-                Text("Marcar como hecho!", color = Color.White)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Schedule,
+                        contentDescription = null,
+                        tint = colorRed,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = clase.horario,
+                        fontSize = 14.sp,
+                        color = Color.White
+                    )
+                }
 
+                Text(
+                    text = clase.monitor,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 14.sp,
+                    color = Color.White
+                )
             }
-        }*/
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                clase.nombre,
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
-                color = Color.White,
-            )
-            Text(
-                clase.sala, fontWeight = FontWeight.Bold,
-                fontSize = 12.sp,
-                color = Color.White
-            )
-
-            Text(
-                clase.horario, fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-                color = Color.White
-            )
-
-            val apuntados = clase.apuntados
-            val limite = clase.limite
-
-
-            Text(
-                text = "$apuntados/$limite", color = Color.White, fontSize = 14.sp
-            )
-        }
-
-        Box(
-            modifier = Modifier.align(Alignment.BottomStart)
-                .padding(horizontal = 20.dp, vertical = 14.dp)
-        ) {
-            Text(
-                text = clase.monitor, fontSize = 16.sp,
-                color = Color.White,
-            )
         }
     }
     Spacer(modifier = Modifier.height(10.dp))

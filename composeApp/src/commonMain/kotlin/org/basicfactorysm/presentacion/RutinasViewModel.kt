@@ -69,9 +69,6 @@ class RutinasViewModel(private val repository: IRutinaRepository) : ViewModel() 
         getAllExercises()
     }
 
-
-
-
     private fun getAllExercises() {
         viewModelScope.launch {
             _listaAllExercises = repository.getAllExercises()

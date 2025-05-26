@@ -15,32 +15,6 @@ import org.basicfactorysm.model.Serie
 
 object DataManager {
 
-    val ListaRutinas = mutableListOf(
-        Rutina(1, "Empujes 1", 1, 0, 0),
-        //Rutina(2, "Espalda", "Rutina avanzada!", 4, 30, ListaRutinaEspalda),
-        //Rutina(3, "Pierna", "Rutina media!", 4, 30, ListaRutinaPierna)
-    )
-
-
-
-
-    /*val ListaRutinaEspalda: List<Ejercicio> = listOf(
-        Ejercicio(5, "Dominadas", 4, 10, 90, "ruta/img"),
-        Ejercicio(6, "Jalón al pecho", 4, 10, 120, "ruta/img"),
-        Ejercicio(7, "Remo", 4, 10, 120, "ruta/img"),
-        Ejercicio(8, "Peso muerto", 4, 8, 120, "ruta/img")
-    )
-
-    val ListaRutinaPierna: List<Ejercicio> = listOf(
-        Ejercicio(5, "Sentadillas", 4, 10, 90, "ruta/img"),
-        Ejercicio(6, "Prensa", 4, 10, 120, "ruta/img"),
-        Ejercicio(7, "Zancadas", 4, 10, 120, "ruta/img"),
-        Ejercicio(8, "Aductores", 4, 8, 120, "ruta/img")
-    )*/
-
-
-
-
     //------RESTO DE OBJETOS------//
 
     val ListaClases = mutableListOf(

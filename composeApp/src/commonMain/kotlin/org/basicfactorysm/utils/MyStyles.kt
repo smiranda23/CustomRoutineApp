@@ -1,5 +1,6 @@
 package org.basicfactorysm.utils
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -29,7 +30,13 @@ val styleItemSetDetailsBody = TextStyle(
 
 
 //COLORES QUE APLICAN A TODAS LAS SCREENS (excepto login y settings, de momento)
-val backgroundApp = Color(0xFF211e1e) //Blanco tirando a gris/rojo
+val backgroundApp = Brush.verticalGradient(
+    colors = listOf(
+        Color(0xFF121212),
+        Color(0xFF1B1B1F),
+        Color(0xFF1F1F23)
+    )
+)
 val colorRed = Color(0xFF9f2413) //Rojo tirando a marron
 val backgroundHome = Color.Black
 
